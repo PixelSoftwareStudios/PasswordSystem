@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<HTML>
+	<head>
+		<meta charset="UTF-8"></meta>
+		<title>Password System</title>
+		<link rel="stylesheet" href="/client/index.css">
+		<script src="/client/socket.io-client/dist/socket.io.js"></script>
+	</head>
+
+	<body>
+		<div id="register" style="display: none">
+			Username: <input id="registerusername" type="text"></input><br>
+			Password: <input id="registerpassword" type="password"></input><br>
+			Email: <input id="registeremail" type="email"></input><br>
+			<button id="cancel">Cancel</button>
+			<button id="registerAccount">Sign Up!</button>
+		</div>
+		<div id="login">
+			<span id="usernameSpan">Username: <input id="loginusername" type="text"></input><br></span>
+			<span id="passwordSpan">Password: <input id="loginpassword" type="password"></input></span>
+			<button id="signin">Sign In</button>
+			<button id="signup">Register an account</button>
+		</div>
+		<div id="successDiv" style="display: none">
+			<p id="welcomeText"></p>
+		</div>
+		<script src="/client/main.js"></script>
+	</body>
+</HTML>

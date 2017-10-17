@@ -1,0 +1,20 @@
+#loginusername, #loginpassword, #registerusername, #registerpassword, #registeremail {
+	margin-bottom: 10px;
+}
+
+#register, #login {
+	max-width: 500px;
+
+	display: block;
+	margin: auto;
+	margin-top: 300px;
+}
+
+#signin, #signup, #cancel, #registerAccount {
+	margin-left: 5px;
+	margin-bottom: 5px;
+}
+
+/*#usernameSpan, #passwordSpan {
+	margin-bottom: 10px;
+}*/
