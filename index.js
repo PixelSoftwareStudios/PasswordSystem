@@ -5,7 +5,7 @@ const app = express();
 const serv = require("http").Server(app);
 const io = require("socket.io")(serv, {});
 
-let db = mongojs("localhost:27017/passworddb", ["account"]);
+let db = mongojs("passwordSystem:passwordSystem@localhost:27017/passworddb", ["account"]);
 
 app.get("/", function(req, res) {
 	res.sendFile(__dirname + "/client/index.html");
@@ -18,11 +18,11 @@ serv.listen(8000);
 
 console.log("Server has loaded");
 
-var isValidEmail = email => {
-	console.log("isValidEmail called");
-	var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	return regex.test(email);
-}
+// var isValidEmail = email => {
+// 	console.log("isValidEmail called");
+// 	var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+// 	return regex.test(email);
+// }
 
 var checkPassword = (data, cb) => {
 	var unHashedPassword = data.password;
@@ -44,16 +44,21 @@ var getPasswordFromUserName = username => {
 	});
 }
 
-var isUsernameTaken = (data, cb) => {
-	db.account.find({username: data.username}, (err, res) => {
-		if (res) {
+var isUsernameTaken = (user, cb) => {
+	console.log("isUsernameTaken called");
+	db.account.find({username: user}, (err, res) => {
+		if (err) console.log("Cou " + err);
+		console.log("Res: " + res);
+		if (res.length > 0) {
+			console.log("rddd");
 			cb(true);
 		} else {
+			console.log("Ffd");
 			cb(false);
 		}
 	});
-	console.log("isUsernameTaken");
 }
+
 var addUser = (data, cb) => {
 	var unHashedPassword = data.password;
 	bcrypt.hash(unHashedPassword, 10, (err, hash) => {
@@ -84,20 +89,16 @@ io.sockets.on("connection", socket => {
 
 	socket.on("regCredentials", data => {
 		console.log("Socket got regCredentials");
-		var useremail = data.email;
-		isUsernameTaken(data, res => {
-			console.log("isUsernameTaken called");
+		isUsernameTaken(data.username, res => {
 			if (res) {
-				if (isValidEmail(useremail) == false) {
-					console.log("username is taken");
-					socket.emit("regCredentialsResponse", {success: false});
-					console.log("socket did not emit regCredentialsResponse");
-				}
-			} else if (isValidEmail(useremail) == true) {
+				console.log("username is taken");
+				socket.emit("regCredentialsResponse", {type: "usernameTaken"});
+				console.log("socket did not emit regCredentialsResponse");
+			} else {
 				console.log("username is not taken");
 				addUser(data, () => {
 					console.log("addUser called");
-					socket.emit("regCredentialsResponse", {success: true});
+					socket.emit("regCredentialsResponse", {type: "success"});
 					console.log("socket emitted regCredentialsResponse");
 				});
 			}

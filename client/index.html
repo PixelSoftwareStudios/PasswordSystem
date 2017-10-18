@@ -4,26 +4,67 @@
 		<meta charset="UTF-8"></meta>
 		<title>Password System</title>
 		<link rel="stylesheet" href="/client/index.css">
-		<script src="/client/socket.io-client/dist/socket.io.js"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 	</head>
 
 	<body>
-		<div id="register" style="display: none">
-			Username: <input id="registerusername" type="text"></input><br>
-			Password: <input id="registerpassword" type="password"></input><br>
-			Email: <input id="registeremail" type="email"></input><br>
-			<button id="cancel">Cancel</button>
-			<button id="registerAccount">Sign Up!</button>
+		<div id="divRegister" style="display: none">
+			<!-- <form>
+				Username: <input id="registerusername" type="text"></input><br>
+				Password: <input id="registerpassword" type="password"></input><br>
+				Email: <input id="registeremail" type="email"></input><br>
+				<button id="cancel">Cancel</button>
+				<button id="registerAccount">Sign Up!</button>
+			</form> -->
+			<form>
+				<div class="form-group">
+					<label for="registerUsername">Username:</label>
+					<input type="text" class="form-control" id="registerUsername">
+				</div>
+				<div class="form-group">
+					<label for="registerPassword">Password:</label>
+					<input type="password" class="form-control" id="registerPassword">
+				</div>
+				<div class="form-group">
+					<label for="registerEmail">Email:</label>
+					<input type="text" class="form-control" id="registerEmail">
+				</div>
+			</form>
+
+			<button id="btnCancel" class="btn btn-default">Cancel</button>
+			<button id="btnSignUp" class="btn btn-default">Sign Up</button>
 		</div>
-		<div id="login">
-			<span id="usernameSpan">Username: <input id="loginusername" type="text"></input><br></span>
-			<span id="passwordSpan">Password: <input id="loginpassword" type="password"></input></span>
-			<button id="signin">Sign In</button>
-			<button id="signup">Register an account</button>
+		<div id="divLogin">
+			<!-- <form>
+				<span id="usernameSpan">Username: <input id="loginusername" type="text"></input><br></span>
+				<span id="passwordSpan">Password: <input id="loginpassword" type="password"></input></span>
+				<button id="signin">Sign In</button>
+				<button id="signup">Register an account</button>
+			</form> -->
+			<form>
+				<div class="form-group">
+					<label for="loginUsername">Username:</label>
+					<input type="text" class="form-control" id="loginUsername">
+				</div>
+				<div class="form-group">
+					<label for="loginPassword">Password:</label>
+					<input type="password" class="form-control" id="loginPassword">
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox">Remember me</label>
+				</div>
+			</form>
+			
+			<button id="btnSignIn" class="btn btn-default">Sign In</button>
+			<button id="btnRegister" class="btn btn-default">Register an account</button>
 		</div>
 		<div id="successDiv" style="display: none">
 			<p id="welcomeText"></p>
 		</div>
+
 		<script src="/client/main.js"></script>
 	</body>
 </HTML>

@@ -1,45 +1,35 @@
-var signinDiv = document.getElementById('login');
-// var loginBtn = document.getElementById("loginBtn");
-var loginUsername = document.getElementById('loginusername');
-var loginPassword = document.getElementById('loginpassword');
-var btnSignIn = document.getElementById('signin');
-var btnSignUp = document.getElementById('signup');
+var divLogin = document.getElementById("divLogin");
+var divRegister = document.getElementById("divRegister");
+var loginUsername = document.getElementById("loginUsername");
+var loginPassword = document.getElementById("loginPassword");
+var btnSignIn = document.getElementById("btnSignIn");
+var btnSignUp = document.getElementById("btnSignUp");
 var successDiv = document.getElementById("successDiv");
 var welcomeText = document.getElementById("welcomeText");
 
-var registerDiv = document.getElementById('register');
-// var registerBtn = document.getElementById("registerBtn");
-var registerUsername = document.getElementById('registerusername');
-var registerPassword = document.getElementById('registerpassword');
-var registerEmail = document.getElementById('registeremail');
-var btnRegister = document.getElementById('registerAccount');
-var btnCancel = document.getElementById('cancel');
+var registerUsername = document.getElementById("registerUsername");
+var registerPassword = document.getElementById("registerPassword");
+var registerEmail = document.getElementById("registerEmail");
+var btnRegister = document.getElementById("btnRegister");
+var btnCancel = document.getElementById("btnCancel");
 var socket = io();
 
-// loginBtn.onclick = function(){
-// 	loginBtn.style = "display: inline-block";
-// }
-//
-// registerBtn.onclick = function(){
-// 	registerBtn.style = "display: inline-block";
-// }
-
 btnSignIn.onclick = function(){
-	socket.emit('lgnCredentials', {
+	socket.emit("lgnCredentials", {
 		username: loginUsername.value,
 		password: loginPassword.value
 	});
 	console.log("btnSignIn clicked");
 }
 
-btnSignUp.onclick = function(){
-	signinDiv.style.display = 'none';
-	registerDiv.style.display = 'block';
+btnRegister.onclick = function(){
+	divLogin.style.display = "none";
+	divRegister.style.display = "block";
 	console.log("btnSignUp clicked");
 }
 
-btnRegister.onclick = function(){
-	socket.emit('regCredentials', {
+btnSignUp.onclick = function(){
+	socket.emit("regCredentials", {
 		username: registerUsername.value,
 		password: registerPassword.value,
 		email: registerEmail.value
@@ -48,15 +38,15 @@ btnRegister.onclick = function(){
 }
 
 btnCancel.onclick = function(){
-	signinDiv.style.display = 'block';
-	registerDiv.style.display = 'none';
+	divLogin.style.display = "block";
+	divRegister.style.display = "none";
 }
 
-socket.on('lgnCredentialsResponse', data => {
+socket.on("lgnCredentialsResponse", data => {
 	if (data.success) {
 		console.log(data.username);
-		signinDiv.style.display = 'none';
-		registerDiv.style.display = 'none';
+		divLogin.style.display = "none";
+		divRegister.style.display = "none";
 		welcomeText.innerHTML = "Hello, " + data.username;
 		successDiv.style.display = "block";
 		console.log("Sucessfully logged in!");
@@ -64,12 +54,16 @@ socket.on('lgnCredentialsResponse', data => {
 		alert("Invalid Credentials!");
 	}
 });
-socket.on('regCredentialsResponse', data => {
-	if (data.success) {
-		registerDiv.style.display = 'none';
-		signinDiv.style.display = 'block';
+
+socket.on("regCredentialsResponse", data => {
+	if (data.type = "success") {
+		divRegister.style.display = "none";
+		divLogin.style.display = "block";
 		console.log("Sucessfully Registered!");
-	} else {
-		alert("Invalid Credentials!");
+	}
+
+	if (data.type = "usernameTaken") {
+		console.log("usernametaken");
+		alert("Username has already been registered");
 	}
 });
