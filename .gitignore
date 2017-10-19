@@ -1,4 +1,5 @@
 /node_modules
+.gitignore
 .DS_Store
 *.md
 package-lock.json

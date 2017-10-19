@@ -13,6 +13,7 @@
 
 #divRegister, #divLogin {
 	max-width: 500px;
+	background-color: rgb(250, 250, 250);
 	display: block;
 	margin: auto;
 	margin-top: 300px;

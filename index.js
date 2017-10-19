@@ -24,11 +24,17 @@ console.log("Server has loaded");
 // 	return regex.test(email);
 // }
 
+//Compares the unhashed password to the hash from the database
 var checkPassword = (data, cb) => {
 	var unHashedPassword = data.password;
+	console.log(data.username);
 	var dbHash = getPasswordFromUserName(data.username);
 	bcrypt.compare(unHashedPassword, dbHash, (err, res) => {
-    	if (res = true) {
+		console.log(res);
+		console.log(unHashedPassword);
+		console.log(dbHash);
+		console.log(data);
+    	if (res) {
 			cb(true);
 		} else {
 			cb(false);
@@ -38,17 +44,23 @@ var checkPassword = (data, cb) => {
 	console.log("isValidPassword");
 }
 
-var getPasswordFromUserName = username => {
-	db.account.find({username: username}, (err, res) => {
-		return res.password;
+//Gets the password from a user from the database
+var getPasswordFromUserName = user => {
+	db.account.find({"username": user}, (err, res) => {
+		// console.log("Error: " + err);
+		// console.log("Result: " + JSON.stringify(res));
+		// console.log("Re spas: " + res[0].password);
+		// console.log("res user: " + res[0].username);
+		return res[0].password;
 	});
 }
-
+//Checks if the given username is taken in the database
 var isUsernameTaken = (user, cb) => {
 	console.log("isUsernameTaken called");
-	db.account.find({username: user}, (err, res) => {
-		if (err) console.log("Cou " + err);
-		console.log("Res: " + res);
+	db.account.find({"username": user}, (err, res) => {
+		if (err) console.log(err);
+		console.log("Res length: " + res.length + " Res: " + res);
+		// if there is an entry or not
 		if (res.length > 0) {
 			console.log("rddd");
 			cb(true);
@@ -59,10 +71,11 @@ var isUsernameTaken = (user, cb) => {
 	});
 }
 
+//Adds a user to the database
 var addUser = (data, cb) => {
 	var unHashedPassword = data.password;
 	bcrypt.hash(unHashedPassword, 10, (err, hash) => {
-		db.account.insert({username: data.username, password: hash, email: data.email}, err => {
+		db.account.insert({"username": data.username, "password": hash, "email": data.email}, err => {
 			cb();
 		});
 	});
@@ -71,17 +84,16 @@ var addUser = (data, cb) => {
 
 io.sockets.on("connection", socket => {
 	socket.on("lgnCredentials", data => {
-		var usernaame = data.username;
 		console.log("Socket got lgnCredentials");
 		checkPassword(data, correct => {
 			console.log("isValidPassword called");
 			if (correct) {
 				console.log("Valid password");
-				socket.emit("lgnCredentialsResponse", {success: true, username: usernaame});
+				socket.emit("lgnCredentialsResponse", {"type": "success", "username": data.username});
 				console.log("socket emitted lgnCredentialsResponse");
 			} else {
 				console.log("Invalid password");
-				socket.emit("lgnCredentialsResponse", {success: false});
+				socket.emit("lgnCredentialsResponse", {"type": "invalidCreds"});
 				console.log("socket did not emit lgnCredentialsResponse");
 			}
 		});
@@ -92,13 +104,13 @@ io.sockets.on("connection", socket => {
 		isUsernameTaken(data.username, res => {
 			if (res) {
 				console.log("username is taken");
-				socket.emit("regCredentialsResponse", {type: "usernameTaken"});
+				socket.emit("regCredentialsResponse", {"type": "usernameTaken"});
 				console.log("socket did not emit regCredentialsResponse");
 			} else {
 				console.log("username is not taken");
 				addUser(data, () => {
 					console.log("addUser called");
-					socket.emit("regCredentialsResponse", {type: "success"});
+					socket.emit("regCredentialsResponse", {"type": "success"});
 					console.log("socket emitted regCredentialsResponse");
 				});
 			}

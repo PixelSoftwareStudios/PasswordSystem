@@ -43,26 +43,28 @@ btnCancel.onclick = function(){
 }
 
 socket.on("lgnCredentialsResponse", data => {
-	if (data.success) {
+	if (data.type == "success") {
 		console.log(data.username);
 		divLogin.style.display = "none";
 		divRegister.style.display = "none";
 		welcomeText.innerHTML = "Hello, " + data.username;
 		successDiv.style.display = "block";
 		console.log("Sucessfully logged in!");
-	} else {
-		alert("Invalid Credentials!");
+	}
+
+	if (data.type == "invalidCreds") {
+		alert("Invalid credentials");
 	}
 });
 
 socket.on("regCredentialsResponse", data => {
-	if (data.type = "success") {
+	if (data.type == "success") {
 		divRegister.style.display = "none";
 		divLogin.style.display = "block";
 		console.log("Sucessfully Registered!");
 	}
 
-	if (data.type = "usernameTaken") {
+	if (data.type == "usernameTaken") {
 		console.log("usernametaken");
 		alert("Username has already been registered");
 	}
